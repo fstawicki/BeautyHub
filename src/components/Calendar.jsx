@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { startOfMonth, endOfMonth, differenceInDays, subMonths, addMonths } from 'date-fns'
 import '../styles/Calendar.scss';
+import { useEffect } from 'react';
 
 const daysOfWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -9,30 +10,39 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 const Calendar = () => {
 
   const [today, setToday] = useState(new Date());
-  const [startDate, setStartDate] = useState(startOfMonth(new Date()));
-  const [navDateMonth, setNavDateMonth] = useState(months[new Date().getMonth()]);
-  const [navDateYear, setNavDateYear] = useState(new Date().getFullYear());
-  const [endDate, setEndDate] = useState(endOfMonth(new Date()));
+
+  const [date, setDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(startOfMonth(date));
+  const [navDateMonth, setNavDateMonth] = useState(months[date.getMonth()]);
+  const [navDateYear, setNavDateYear] = useState(date.getFullYear());
+  const [endDate, setEndDate] = useState(endOfMonth(date));
   const [numDays, setNumDays] = useState((differenceInDays(endDate, startDate) + 1));
 
   const [prefixDays, setPrefixDays] = useState(startDate.getDay() - 1);
   // minus one adapts function for mon - sun calendar instead of sun - sat
   const [sufixDays, setSufixDays] = useState(7 - endDate.getDay());
 
-
-  console.log(startDate)
-
-
   const goToPrevMonth = () => {
-    setStartDate(startOfMonth(new Date() -1));
+    setDate(subMonths(date, 1));
+    setStartDate(startOfMonth(date));
+    setNavDateMonth(months[date.getMonth()]);
+    setNavDateYear(date.getFullYear());
+    setEndDate(endOfMonth(date));
+    setNumDays((differenceInDays(endDate, startDate) + 1));
+    setPrefixDays(startDate.getDay() - 1);
+    setSufixDays(7 - endDate.getDay());
+
+    console.log(date)
     console.log(startDate)
+
   }
 
   const goToNextMonth = () => {
-
+    setStartDate(addMonths(startDate,1));
+    console.log(startDate)
   }
-  console.log(startDate)
 
+  console.log(date)
   return (
     <div className='calendar'>
       <div className="calendar_nav">
